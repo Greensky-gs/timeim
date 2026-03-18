@@ -1,0 +1,39 @@
+#include "display.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_STR_SIZE 8
+#define HEIGHT 5
+
+void display(int ** files, int size) {
+	char buffer[MAX_STR_SIZE + 1];
+	int totalsize = MAX_STR_SIZE * size + size - 1;
+
+	char * line;
+	if ((line = malloc(totalsize + 1)) == NULL) {
+		perror("malloc");
+		return;
+	}
+	line[0] = 0;
+	line[MAX_STR_SIZE] = 0;
+	
+	int i = 0;
+	while (i < HEIGHT) {
+		int f = 0;
+		while (f < size) {
+			if ((fgets(buffer, MAX_STR_SIZE, files[f])) == NULL) {
+				free(line);
+				perror("fgets");
+				return;
+			}
+
+			printf("%s  ");
+			f++;
+		}
+
+		printf("\n");
+		i++;
+	}
+
+	free(line);
+}
