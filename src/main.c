@@ -137,6 +137,11 @@ int main(int argc, char * argv[]) {
 	int minutes = in_args(argc, argv, "-m", NULL) || in_args(argc, argv, "--minutes", NULL);
 	int hours = in_args(argc, argv, "--hours", NULL);
 
+	if (!hours && !minutes && !seconds) {
+		help_page();
+		return 0;
+	}
+
 	char * colargs;
 	ColorType coloration = None;
 	if ((colargs = str_arg(argc, argv, "--color", NULL)) != NULL) {
