@@ -23,7 +23,9 @@ Since many paremeters are required, I recommend you to edit your `~/.bashrc` fil
 
 1. Get the code ( `git clone https://github.com/Greensky-gs/timeim && cd timeim` )
 2. Install **gcc** and **make** if you don't already have them ( common installations : `pacman -S gcc make`, `apt install gcc make` ... )
-3. Compile the projet. **Make sure the `src` and `assets` folder are at the same location**. You can use `make install`
+3. Compile the projet. **Make sure the `src` and `assets` folder are at the same location**.
+  * You can use `sudo make install` for a global installation
+  * You can use `make DATADIR=./assets` for a local installation, but now your `./assets` must be in the same directory as the executable. You can tweak this path if you want (ie: to an absolute path) 
 4. Execute the code generated in the **bin** directory : it has a **timeim** executable file, if everything went fine
 
 ## Issues

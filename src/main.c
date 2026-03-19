@@ -8,6 +8,10 @@
 
 #define FILE_MAX_SIZE 12
 
+#ifndef DATADIR
+#define DATADIR "./assets"
+#endif
+
 static ColorType extract_color_type(char * a) {
 	if (streq(a, "all")) return All;
 	if (streq(a, "nuanced")) return AllNuanced;
@@ -16,8 +20,9 @@ static ColorType extract_color_type(char * a) {
 	return None;
 }
 static int get_file(char car) {
-	char path[15] = {0};
-	sprintf(path, "./assets/%c.txt", car);
+	char path[64];
+
+	snprintf(path, sizeof(path), "%s/%c.txt", DATADIR, car);
 
 	return open(path, O_RDONLY, 0);
 }
@@ -96,6 +101,7 @@ void help_page() {
 		{ "-h", "--help", "Displays this help page" },
 		{ "-m", "--minutes", "Displays the minutes in the result" },
 		{ "-s", "--seconds", "Displays the seconds in the result" },
+		{ "-f", "--format \x1b[90mFORMAT\x1b[0m", "    Select the format, where \x1b[90mformat\x1b[0m is either 24 or 12, for hours" },
 		{ NULL, "--hours", "Displays the hours in the result" },
 		{ NULL, "--suffixes", "Displays the suffixes between each group of numbers" },
 		{ NULL, "--color \x1b[90mCOLOR\x1b[0m", "     Select a coloration mode, where \x1b[90mCOLOR\x1b[0m is either one of : \x1b[33msuffixes\x1b[0m, \x1b[33mnumbers\x1b[0m, \x1b[33mall\x1b[0m or \x1b[33mnuanced\x1b[0m. Everything else will be ignored and not colored" }
@@ -147,21 +153,43 @@ int main(int argc, char * argv[]) {
 	if ((colargs = str_arg(argc, argv, "--color", NULL)) != NULL) {
 		coloration = extract_color_type(colargs);
 	}
+	
+	char * formatstr = NULL;
+	if ((formatstr = str_arg(argc, argv, "-f", NULL)) == NULL) {
+		formatstr = str_arg(argc, argv, "--format", NULL);
+	}
+	int is_12 = formatstr == NULL ? 0 : streq(formatstr, "12");
 
-	if (hours) {
-		handle_int(timeinfo->tm_hour, array, &index);
-		if (suffixes) handle_str("h", array, &index);
-	}
-	if (minutes) {
-		handle_int(timeinfo->tm_min, array, &index);
-		if (suffixes) handle_str("m", array, &index);
-	}
-	if (seconds) {
-		handle_int(timeinfo->tm_sec, array, &index);
-		if (suffixes) handle_str("s", array, &index);
+	if (is_12) {
+		if (hours) {
+			handle_int(timeinfo->tm_hour > 12 ? timeinfo->tm_hour - 12 : timeinfo->tm_hour, array, &index);
+			if (suffixes && minutes) handle_str(":", array, &index);
+		}
+		if (minutes) {
+			handle_int(timeinfo->tm_min, array, &index);
+		}
+		if (suffixes) {
+			handle_str(timeinfo->tm_hour > 12 ? "pm" : "am", array, &index);
+		}
+	} else {
+		if (hours) {
+			handle_int(timeinfo->tm_hour, array, &index);
+			if (suffixes) handle_str("h", array, &index);
+		}
+		if (minutes) {
+			handle_int(timeinfo->tm_min, array, &index);
+			if (suffixes) handle_str("m", array, &index);
+		}
+		if (seconds) {
+			handle_int(timeinfo->tm_sec, array, &index);
+			if (suffixes) handle_str("s", array, &index);
+		}
 	}
 
-	if (index == 0) return 0;
+	if (index == 0) {
+		help_page();
+		return 0;
+	};
 	display(array, index, coloration);
 
 	int i = 0;

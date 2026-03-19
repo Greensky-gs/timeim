@@ -1,0 +1,5 @@
+    aa    
+   aaaa   
+  aa  aa  
+ aaaaaaaa 
+aa      aa
