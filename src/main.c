@@ -108,7 +108,7 @@ void help_page() {
 	};
 
 	int i = 0;
-	while (i < 6) {
+	while (i < 7) {
 		struct help_entry entry = entries[i];
 		printf("        ");
 		if (entry.short_name == NULL) printf("    ");
