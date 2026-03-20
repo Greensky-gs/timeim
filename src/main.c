@@ -8,10 +8,6 @@
 
 #define FILE_MAX_SIZE 12
 
-#ifndef DATADIR
-#define DATADIR "./assets"
-#endif
-
 static ColorType extract_color_type(char * a) {
 	if (streq(a, "all")) return All;
 	if (streq(a, "nuanced")) return AllNuanced;
@@ -53,22 +49,9 @@ static int my_log10(int x) {
 	}
 	return l;
 }
-static int handle_int(int original, int * files, int * index) {
-	int x = original;
-	if (x == 0) {
-		files[*index] = get_file('0');
-		files[(*index) * -1 - 1] = 0;
-		(*index)++;
-		return 1;
-	}
-	int c = 0;
-	if (original < 10) {
-		files[*index] = get_file(48);
-		files[(*index) * -1 - 1] = 0;
-		(*index)++;
-		c++;
-	}
-	while (x > 0) {
+static int handle_int(int x, int * files, int * index) {
+	int i = 0;
+	while (i < 2) {
 		int logx = my_log10(x);
 		int maj = x / power10(logx);
 
@@ -77,16 +60,10 @@ static int handle_int(int original, int * files, int * index) {
 		x = x % power10(logx);
 		files[(*index) * -1 - 1] = 0;
 		(*index)++;
-		c++;
-	}
-	if (original % 10 == 0) {
-		files[*index] = get_file(48);
-		files[(*index) * -1 - 1] = 0;
-		(*index)++;
-		c++;
+		i++;
 	}
 
-	return c;
+	return 2;
 }
 
 struct help_entry {
