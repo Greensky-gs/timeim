@@ -50,6 +50,13 @@ static int my_log10(int x) {
 	return l;
 }
 static int handle_int(int x, int * files, int * index) {
+	if (x < 10) {
+		files[*index] = get_file(48);
+		(*index)++;
+		files[*index] = get_file(48 + x);
+		(*index)++;
+		return 2;
+	}
 	int i = 0;
 	while (i < 2) {
 		int logx = my_log10(x);
