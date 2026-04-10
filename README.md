@@ -27,6 +27,7 @@ Since many paremeters are required, I recommend you to edit your `~/.bashrc` fil
   * You can use `sudo make install` for a global installation
   * You can use `make DATADIR=./assets` for a local installation, but now your `./assets` must be in the same directory as the executable. You can tweak this path if you want (ie: to an absolute path) 
 4. Execute the code generated in the **bin** directory : it has a **timeim** executable file, if everything went fine
+5. You can also create the man page entry : `make manpage`. It might fail if you don't run in sudo, since it will copy the file into `/usr/share/man/man1`, if so, you can either re-run the command in sudo, or copy the file (`./build/timeim.1`) into wherever you please
 
 ## Issues
 
