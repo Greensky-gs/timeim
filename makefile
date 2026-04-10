@@ -51,3 +51,6 @@ full:
 
 .PHONY: all install clean launch full shared
 
+manpage: $(BUILD_DIR) docs/timeim.1.md
+	pandoc -s -t man docs/timeim.1.md -o $(BUILD_DIR)/timeim.1
+	cp $(BUILD_DIR)/timeim.1 /usr/share/man/man1/timeim.1
