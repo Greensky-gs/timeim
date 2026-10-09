@@ -14,10 +14,10 @@ sha256sums=('SKIP')
 
 build() {
   cd "$srcdir/$_name"
-  make all
+  sudo make all
 }
 
 package() {
   cd "${srcdir}/$_name"
-  make PREFIX=/usr DATADIR=/usr/share/${pkgname} DESTDIR="${pkgdir}" install
+  sudo make PREFIX=/usr DATADIR=/usr/share/${pkgname} DESTDIR="${pkgdir}" install
 }
